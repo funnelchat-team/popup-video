@@ -1,21 +1,21 @@
 <template>
   <div class="float-right pb-4">
-    <!-- <button>{{__('Open Modal')}}</button> -->
-    <button
-      v-if="showButtonIntercom"
-      class="bg-transparent hover:bg-blue-500 text-blue-700 font-semibold py-2 px-4 border border-blue-500 rounded"
-      @click="redireccionar()"
-    >
-      <!-- <svg class="sidebar-icon" xmlns="http://www.w3.org/2000/svg"  viewBox="0 0 24 24" ><path fill="var(--sidebar-icon)" d="M12 22a10 10 0 1 1 0-20 10 10 0 0 1 0 20zm0-2a8 8 0 1 0 0-16 8 8 0 0 0 0 16zM10.59 8.59a1 1 0 1 1-1.42-1.42 4 4 0 1 1 5.66 5.66l-2.12 2.12a1 1 0 1 1-1.42-1.42l2.12-2.12A2 2 0 0 0 10.6 8.6zM12 18a1 1 0 1 1 0-2 1 1 0 0 1 0 2z"/></svg> -->
-      {{__("Start tour")}}
-    </button>
     <button
       v-if="showButtonVimeo"
-      class="bg-transparent hover:bg-blue-500 text-blue-700 font-semibold py-2 px-4 border border-blue-500 rounded"
-      @click="openModal"
+      @click="redireccionar()"
+      class="bg-transparent hover:bg-teal-500 text-teal-700 font-semibold hover:text-white py-2 px-4 border border-teal-500 hover:border-transparent rounded"
     >
-      <!-- <svg class="sidebar-icon" xmlns="http://www.w3.org/2000/svg"  viewBox="0 0 24 24" ><path fill="var(--sidebar-icon)" d="M12 22a10 10 0 1 1 0-20 10 10 0 0 1 0 20zm0-2a8 8 0 1 0 0-16 8 8 0 0 0 0 16zM10.59 8.59a1 1 0 1 1-1.42-1.42 4 4 0 1 1 5.66 5.66l-2.12 2.12a1 1 0 1 1-1.42-1.42l2.12-2.12A2 2 0 0 0 10.6 8.6zM12 18a1 1 0 1 1 0-2 1 1 0 0 1 0 2z"/></svg> -->
-      {{__("See tutorial")}}
+      <font-awesome-icon :icon="faBus" />
+      {{ __("Start tour") }}
+    </button>
+
+    <button
+      v-if="showButtonVimeo"
+      @click="openModal"
+      class="bg-transparent hover:bg-teal-500 text-teal-700 font-semibold hover:text-white py-2 px-4 border border-teal-500 hover:border-transparent rounded"
+    >
+      <font-awesome-icon :icon="faFilm" />
+      {{ __("See tutorial") }}
     </button>
 
     <portal to="modals">
@@ -24,7 +24,7 @@
           v-if="modalOpen"
           @confirm="confirmModal"
           @close="closeModal"
-          :video="videoUrl"
+          :video_url="videoUrl"
         />
       </transition>
     </portal>
@@ -33,21 +33,26 @@
 
 <script>
 import GeneralModal from "./GeneralModal.vue";
+import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
+import { faFilm, faBus } from "@fortawesome/free-solid-svg-icons";
 
 export default {
   props: ["card", "resource", "resourceId", "resourceName"],
 
   data() {
     return {
+      faBus,
+      faFilm,
       showButtonVimeo: false,
       showButtonIntercom: false,
       modalOpen: false,
       videoUrl: "",
-      tourUrl: ""
+      tourUrl: "",
     };
   },
   components: {
-    GeneralModal
+    GeneralModal,
+    FontAwesomeIcon,
   },
   mounted() {
     this.getVimeoUrl();
@@ -55,7 +60,7 @@ export default {
   methods: {
     async getVimeoUrl() {
       const {
-        data: tutorial
+        data: tutorial,
       } = await Nova.request().post(
         "/nova-vendor/popup-video/module_tutorial",
         { module: this.resourceName }
@@ -84,7 +89,7 @@ export default {
     },
     closeModal() {
       this.modalOpen = false;
-    }
-  }
+    },
+  },
 };
 </script>

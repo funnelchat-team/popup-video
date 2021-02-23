@@ -1,68 +1,59 @@
 <template>
-  <modal @modal-close="handleClose">
-    <form
-      @submit.prevent="handleConfirm"
-      slot-scope="props"
-      class="bg-white rounded-lg shadow-lg overflow-hidden"
-      style="width: 655px"
-    >
-      <slot :uppercaseMode="uppercaseMode" :mode="mode">
-        <div class="p-2 object-left">
-          <div class="flex">
-            <div class="ml-auto">
-              <button
-                type="button"
-                data-testid="cancel-button"
-                dusk="cancel-general-button"
-                @click.prevent="handleClose"
-                class="btn text-80 font-normal h-9 btn-link float-right"
-              >
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
-                  <path
-                    class="heroicon-ui"
-                    d="M4.93 19.07A10 10 0 1 1 19.07 4.93 10 10 0 0 1 4.93 19.07zm1.41-1.41A8 8 0 1 0 17.66 6.34 8 8 0 0 0 6.34 17.66zM13.41 12l1.42 1.41a1 1 0 1 1-1.42 1.42L12 13.4l-1.41 1.42a1 1 0 1 1-1.42-1.42L10.6 12l-1.42-1.41a1 1 0 1 1 1.42-1.42L12 10.6l1.41-1.42a1 1 0 1 1 1.42 1.42L13.4 12z"
-                  />
-                </svg>
-              </button>
-            </div>
-          </div>
-
-          <div class="mx-auto">
+  <div class="modal-mask">
+    <div class="modal-wrapper">
+      <div class="modal-container">
+        <div class="modal-header flex items-center justify-between">
+          <h3 class="font-bold">{{ title }}</h3>
+          <a @click="$emit('close')" href="#">
+            <font-awesome-icon :icon="faTimes" class="text-gray-700" />
+          </a>
+        </div>
+        <div class="modal-body">
+          <div class="relative h-0" style="padding-bottom: 20rem">
             <iframe
-              :src="video"
-              width="640"
-              height="360"
+              :src="video_url"
               frameborder="0"
-              allow="autoplay; fullscreen"
+              webkitallowfullscreen
+              mozallowfullscreen
               allowfullscreen
+              class="absolute w-full h-full top-0 left-0"
             ></iframe>
           </div>
         </div>
-      </slot>
-    </form>
-  </modal>
+
+        <div class="modal-footer">
+          <slot name="footer">
+            <div class="flex items-center justify-between">
+              <a
+                @click="$emit('close')"
+                class="inline-block align-baseline font-bold text-sm text-green-500 hover:text-green-800"
+                href="#"
+              >
+                {{ __("close") }}
+              </a>
+            </div>
+          </slot>
+        </div>
+      </div>
+    </div>
+  </div>
 </template>
 
 <script>
-import { vueVimeoPlayer } from "vue-vimeo-player";
-export default {
-  components: { vueVimeoPlayer },
-  name: "GeneralModal",
-  props: ["video"],
-  methods: {
-    handleClose() {
-      this.$emit("close");
-    },
-    handleConfirm() {
-      this.$emit("confirm");
-    }
-  },
+import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
+import { faTimes } from "@fortawesome/free-solid-svg-icons";
 
-  mounted() {
-    this.$refs.confirmButton.focus();
-  }
+export default {
+  data() {
+    return {
+      faTimes,
+    };
+  },
+  components: {
+    FontAwesomeIcon,
+  },
+  props: ["video_url"],
+
+  methods: {},
 };
 </script>
-
-<style scoped>
-</style>
